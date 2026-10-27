@@ -6,209 +6,148 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>GOGGINS LOG | Stay Hard</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
 :root{--bg:#090909;--panel:#151515;--line:#303030;--red:#e12b25;--muted:#999}
 body{background:var(--bg);color:#f5f5f5;font-family:Arial,sans-serif}
 .navbar,.panel{background:var(--panel);border:1px solid var(--line)}
 .navbar{border-width:0 0 1px}.brand{font-weight:900;letter-spacing:2px}
-.red{color:var(--red)}.muted,.form-text{color:var(--muted)!important}
+.red{color:var(--red)}.muted{color:var(--muted)!important}
+.label{font-size:.72rem;letter-spacing:1px;color:var(--muted);font-weight:800}
+.quote{background:#171111;border-left:4px solid var(--red);padding:22px;font-size:1.15rem;font-weight:800;line-height:1.6}
 .panel{border-radius:12px;padding:20px;height:100%}
-.quote{background:#171111;border-left:4px solid var(--red);padding:22px;font-size:1.2rem;font-weight:800}
-.metric{font-size:2rem;font-weight:900}.label{font-size:.72rem;letter-spacing:1px;color:var(--muted);font-weight:800}
+.metric{font-size:1.9rem;font-weight:900}
 .form-control,.form-select{background:#0d0d0d;color:#fff;border-color:#444}
 .form-control:focus,.form-select:focus{background:#0d0d0d;color:#fff;border-color:var(--red);box-shadow:0 0 0 .2rem #e12b2525}
 .form-control::placeholder{color:#777}.form-select option{background:#111}
-.btn-red{background:var(--red);color:white;font-weight:bold;border:0}.btn-red:hover{background:#b9201b;color:white}
+.btn-red{background:var(--red);color:white;border:0;font-weight:bold}
+.btn-red:hover{background:#b9201b;color:white}
 .habit{background:#101010;border:1px solid var(--line);padding:14px;border-radius:9px;margin-bottom:10px}
 .habit.done{border-color:#66302d}.habit-check{width:21px;height:21px;accent-color:var(--red)}
 .progress{height:8px;background:#333}.progress-bar{background:var(--red)}
 .section-title{font-size:1rem;font-weight:900;letter-spacing:1px}
 .history-row{border-bottom:1px solid var(--line);padding:13px 0;cursor:pointer}
-.history-row:hover{background:#202020}footer{color:#666}
-@media(max-width:576px){.panel{padding:15px}.metric{font-size:1.65rem}}
+.history-row:hover{background:#202020}
+.chart-wrap{height:260px;position:relative}
+@media(max-width:576px){.panel{padding:15px}.metric{font-size:1.6rem}.chart-wrap{height:230px}}
 </style>
 </head>
 <body>
-<nav class="navbar">
-<div class="container py-2 d-flex justify-content-between">
+<nav class="navbar"><div class="container py-3 d-flex justify-content-between">
 <span class="brand">GOGGINS<span class="red"> LOG</span></span>
-<span class="label">DISCIPLINE / DAILY</span>
-</div></nav>
+<span class="label">DISCIPLINE / DAILY</span></div></nav>
 
 <main class="container py-4">
-<div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+<div class="d-flex justify-content-between align-items-end flex-wrap gap-3 mb-4">
 <div><div class="label">PERSONAL DISCIPLINE DASHBOARD</div>
-<h1 class="fw-bold">The Daily Mirror.</h1>
-<p class="muted mb-0">Track the work. Own the result.</p></div>
-<div><label class="label d-block mb-2" for="day">SELECT DATE</label>
-<input type="date" id="day" class="form-control"></div>
+<h1 class="fw-bold">The Daily Mirror.</h1><p class="muted">Track the work. Own the result.</p></div>
+<div><label class="label d-block mb-2" for="day">SELECT DATE</label><input id="day" type="date" class="form-control"></div>
 </div>
 
 <div class="quote mb-4">
-Every day I look in the mirror, I want to see someone who didn't quit.
-<div class="label mt-3">PERSONAL PARAPHRASE INSPIRED BY DAVID GOGGINS</div>
+"Every morning I woke up, I had a real conversation with that dirty mirror. And every day the same answer came back to me: do you want to be on your deathbed knowing that you could, but you didn't?"
+<div class="label mt-3">THE DAILY MIRROR</div>
 </div>
 
 <div class="row g-3 mb-4">
-<div class="col-6 col-lg-3"><div class="panel">
-<div class="label">DAILY SCORE</div><div class="metric"><span id="score">0</span><span class="red">%</span></div>
-<div class="progress mt-3"><div id="bar" class="progress-bar" style="width:0%"></div></div>
-</div></div>
-<div class="col-6 col-lg-3"><div class="panel">
-<div class="label">COMPLETED</div><div class="metric"><span id="done">0</span><span class="muted fs-6"> / <span id="total">0</span></span></div>
-<div class="muted small">Habits completed</div>
-</div></div>
-<div class="col-6 col-lg-3"><div class="panel">
-<div class="label">CURRENT STREAK</div><div class="metric"><span id="streak">0</span><span class="muted fs-6"> days</span></div>
-<div class="muted small">Successful consecutive days</div>
-</div></div>
-<div class="col-6 col-lg-3"><div class="panel">
-<div class="label">BEST STREAK</div><div class="metric"><span id="best">0</span><span class="muted fs-6"> days</span></div>
-<div class="muted small">Personal record</div>
-</div></div>
+<div class="col-6 col-lg-3"><div class="panel"><div class="label">DAILY SCORE</div><div class="metric"><span id="score">0</span><span class="red">%</span></div><div class="progress mt-3"><div id="bar" class="progress-bar" style="width:0%"></div></div></div></div>
+<div class="col-6 col-lg-3"><div class="panel"><div class="label">COMPLETED</div><div class="metric"><span id="done">0</span> / <span id="total">0</span></div><div class="muted small">Habits completed</div></div></div>
+<div class="col-6 col-lg-3"><div class="panel"><div class="label">CURRENT STREAK</div><div class="metric"><span id="streak">0</span> days</div></div></div>
+<div class="col-6 col-lg-3"><div class="panel"><div class="label">BEST STREAK</div><div class="metric"><span id="best">0</span> days</div></div></div>
 </div>
 
-<div class="row g-4">
+<div class="row g-4 mb-4">
 <div class="col-lg-7"><section class="panel">
-<div class="d-flex justify-content-between align-items-center gap-2">
-<h2 class="section-title">01 / DAILY MISSION</h2>
-<button class="btn btn-sm btn-outline-light" id="manage">Manage habits</button>
-</div>
-<p class="muted small">Check each habit after completing it.</p>
-<div id="habits"></div><div id="empty" class="muted py-3">No habits yet. Add your first one below.</div>
+<div class="d-flex justify-content-between align-items-center"><h2 class="section-title">01 / DAILY MISSION</h2><button id="manage" class="btn btn-sm btn-outline-light">Manage habits</button></div>
+<p class="muted small">Check a habit when it's done.</p><div id="habits"></div><div id="empty" class="muted">No habits yet. Add your first below.</div>
 <div id="builder" class="d-none mt-4 pt-3 border-top border-secondary">
 <h3 class="section-title">BUILD YOUR ROUTINE</h3>
 <form id="habitForm">
-<label class="label mb-2" for="name">HABIT NAME</label>
-<input id="name" class="form-control mb-3" placeholder="e.g. 90 minutes deep study" required maxlength="100">
-<div class="row g-3">
-<div class="col-6"><label class="label mb-2" for="points">WEIGHT (1–100)</label><input id="points" class="form-control" type="number" min="1" max="100" value="10" required></div>
-<div class="col-6"><label class="label mb-2" for="category">CATEGORY</label>
-<select id="category" class="form-select"><option>Study</option><option>Fitness</option><option>Health</option><option>Reading</option><option>Mindset</option><option>Personal</option></select></div>
-</div>
-<div class="form-check my-3"><input class="form-check-input" id="mandatory" type="checkbox" checked><label for="mandatory" class="form-check-label">Mandatory for my streak</label></div>
-<button class="btn btn-red w-100">+ Add Habit</button>
-</form>
-<p class="muted small mt-3">Scores are weighted by the points assigned to each habit.</p>
+<label class="label mb-2" for="name">HABIT NAME</label><input id="name" class="form-control mb-3" required maxlength="100" placeholder="e.g. 90 minutes of deep study">
+<div class="row g-3"><div class="col-6"><label class="label mb-2" for="points">WEIGHT (1–100)</label><input id="points" type="number" min="1" max="100" value="10" class="form-control" required></div>
+<div class="col-6"><label class="label mb-2" for="category">CATEGORY</label><select id="category" class="form-select"><option>Study</option><option>Fitness</option><option>Health</option><option>Reading</option><option>Mindset</option><option>Personal</option></select></div></div>
+<div class="form-check my-3"><input id="mandatory" type="checkbox" class="form-check-input" checked><label for="mandatory" class="form-check-label">Mandatory for my streak</label></div>
+<button class="btn btn-red w-100">+ Add Habit</button></form>
 </div></section></div>
 
 <div class="col-lg-5"><section class="panel">
 <h2 class="section-title">02 / DAILY DEBRIEF</h2>
-<label class="label mb-2" for="gratitude">THREE THINGS I'M GRATEFUL FOR</label>
-<textarea id="gratitude" class="form-control mb-3" rows="4" placeholder="1. Something I have...&#10;2. Someone who helped me...&#10;3. An opportunity..."></textarea>
-<label class="label mb-2" for="win">TODAY'S BIGGEST WIN</label>
-<textarea id="win" class="form-control mb-3" rows="2" placeholder="What did I do well?"></textarea>
-<label class="label mb-2" for="lesson">WHAT NEEDS TO IMPROVE?</label>
-<textarea id="lesson" class="form-control mb-3" rows="2" placeholder="What went wrong?"></textarea>
-<label class="label mb-2" for="tomorrow">TOMORROW'S PRIORITY</label>
-<input id="tomorrow" class="form-control mb-3" placeholder="One important task">
-<button class="btn btn-red w-100" id="saveJournal">Save Daily Debrief</button>
-<div id="message" class="muted small mt-2" aria-live="polite"></div>
-</section></div>
-
-<div class="col-12"><section class="panel">
-<div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
-<h2 class="section-title mb-0">03 / HISTORY & RECORDS</h2>
-<div class="d-flex gap-2">
-<button id="export" class="btn btn-sm btn-outline-light">Export JSON</button>
-<label class="btn btn-sm btn-outline-light mb-0">Import JSON<input id="import" type="file" accept=".json" hidden></label>
-</div></div>
-<p class="muted small mt-3">Select a recorded day to review your score and journal.</p>
-<div id="history"></div>
+<label class="label mb-2" for="gratitude">THREE THINGS I'M GRATEFUL FOR</label><textarea id="gratitude" class="form-control mb-3" rows="4" placeholder="1. Something I have...&#10;2. Someone who helped...&#10;3. An opportunity..."></textarea>
+<label class="label mb-2" for="win">TODAY'S BIGGEST WIN</label><textarea id="win" class="form-control mb-3" rows="2" placeholder="What did I do well?"></textarea>
+<label class="label mb-2" for="lesson">WHAT NEEDS TO IMPROVE?</label><textarea id="lesson" class="form-control mb-3" rows="2" placeholder="What went wrong?"></textarea>
+<label class="label mb-2" for="tomorrow">TOMORROW'S PRIORITY</label><input id="tomorrow" class="form-control mb-3" placeholder="One important task">
+<button id="saveJournal" class="btn btn-red w-100">Save Daily Debrief</button><div id="message" class="muted small mt-2"></div>
 </section></div>
 </div>
-<footer class="text-center small py-4">GOGGINS LOG · YOUR DATA STAYS IN THIS BROWSER · STAY HARD</footer>
+
+<div class="row g-4 mb-4">
+<div class="col-lg-7"><section class="panel">
+<div class="d-flex justify-content-between align-items-center gap-3 flex-wrap"><h2 class="section-title">03 / WEEKLY PERFORMANCE</h2><div><div class="label">WEEKLY AVERAGE</div><div class="metric"><span id="weekAvg">0</span>%</div></div></div>
+<p class="muted small">Last seven days, based on the selected date.</p>
+<div class="chart-wrap"><canvas id="weeklyChart"></canvas></div>
+</section></div>
+<div class="col-lg-5"><section class="panel">
+<h2 class="section-title">04 / MONTHLY DISCIPLINE REPORT</h2><div id="monthLabel" class="label">THIS MONTH</div>
+<div class="row g-3 mt-2">
+<div class="col-6"><div class="label">AVERAGE SCORE</div><div class="metric"><span id="monthAvg">0</span>%</div></div>
+<div class="col-6"><div class="label">BEST DAY</div><div class="metric"><span id="monthBest">0</span>%</div></div>
+<div class="col-6"><div class="label">SUCCESSFUL DAYS</div><div class="metric" id="monthSuccess">0</div><div class="muted small">Mandatory habits completed</div></div>
+<div class="col-6"><div class="label">HABITS COMPLETED</div><div class="metric" id="monthDone">0</div><div class="muted small">Total checkmarks</div></div>
+<div class="col-12"><div class="label">DAYS TRACKED</div><div class="metric" id="monthTracked">0</div></div>
+</div><p class="muted small mt-3">Reports use saved daily records only.</p>
+</section></div>
+</div>
+
+<div class="row g-4"><div class="col-12"><section class="panel">
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-3"><h2 class="section-title">05 / HISTORY & RECORDS</h2>
+<div class="d-flex gap-2"><button id="export" class="btn btn-sm btn-outline-light">Export JSON</button><label class="btn btn-sm btn-outline-light mb-0">Import JSON<input id="import" type="file" accept=".json" hidden></label></div></div>
+<div id="history" class="mt-3"></div>
+</section></div></div>
+<footer class="text-center muted small py-4">GOGGINS LOG · SAVED IN THIS BROWSER · STAY HARD</footer>
 </main>
 
 <script>
-const $=id=>document.getElementById(id);
-const KEY="goggins_log_v3";
-const today=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`};
+const $=id=>document.getElementById(id),KEY="goggins_log_analytics_v1";
 const fmt=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
-const shift=(s,n)=>{let d=new Date(s+"T12:00:00");d.setDate(d.getDate()+n);return fmt(d)};
-const id=()=>Date.now().toString(36)+Math.random().toString(36).slice(2);
+const today=()=>fmt(new Date()),shift=(s,n)=>{let d=new Date(s+"T12:00:00");d.setDate(d.getDate()+n);return fmt(d)};
+const makeId=()=>Date.now().toString(36)+Math.random().toString(36).slice(2);
 const blank=()=>({habits:[],checks:{},gratitude:"",win:"",lesson:"",tomorrow:""});
-function load(){try{let d=JSON.parse(localStorage.getItem(KEY));if(d&&Array.isArray(d.routine)&&d.days)return d}catch(e){}return{routine:[],days:{}}}
-let data=load(),manage=false;
+function load(){try{let x=JSON.parse(localStorage.getItem(KEY));if(x&&Array.isArray(x.routine)&&x.days)return x}catch(e){}return{routine:[],days:{}}}
+let data=load(),managing=false,chart=null;
 function save(){try{localStorage.setItem(KEY,JSON.stringify(data));return true}catch(e){alert("Save failed. Export a backup and check browser storage.");return false}}
-function day(date=$("day").value){if(!data.days[date])data.days[date]={...blank(),habits:data.routine.map(h=>({...h}))};return data.days[date]}
-function score(date){let d=data.days[date];if(!d)return 0;let hs=d.habits||[],max=hs.reduce((s,h)=>s+h.points,0);return max?Math.round(hs.reduce((s,h)=>s+(d.checks[h.id]?h.points:0),0)/max*100):0}
+function getDay(date=$("day").value){if(!data.days[date])data.days[date]={...blank(),habits:data.routine.map(h=>({...h}))};let d=data.days[date];if(!Array.isArray(d.habits))d.habits=[];if(!d.checks)d.checks={};return d}
+function score(date){let d=data.days[date];if(!d)return 0;let hs=d.habits||[],total=hs.reduce((s,h)=>s+Number(h.points||0),0);return total?Math.round(hs.reduce((s,h)=>s+(d.checks[h.id]?Number(h.points||0):0),0)/total*100):0}
 function passed(date){let d=data.days[date];if(!d)return false;let hs=(d.habits||[]).filter(h=>h.mandatory);return hs.length>0&&hs.every(h=>d.checks[h.id])}
-function streaks(){
- let dates=Object.keys(data.days).sort(),run=0,best=0,prev="";
- for(let date of dates){run=passed(date)?(prev===shift(date,-1)?run+1:1):0;best=Math.max(best,run);prev=date}
- let cursor=passed(today())?today():shift(today(),-1),current=0;
- while(passed(cursor)){current++;cursor=shift(cursor,-1)}
- return{current,best}
-}
-function node(tag,cls,text){let n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=text;return n}
+function streakStats(){let best=0,run=0,prev="";for(let date of Object.keys(data.days).sort()){run=passed(date)?(prev===shift(date,-1)?run+1:1):0;best=Math.max(best,run);prev=date}let cur=passed(today())?today():shift(today(),-1),current=0;while(passed(cur)){current++;cur=shift(cur,-1)}return{current,best}}
+function el(tag,cls,text){let n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=text;return n}
 function render(){
- let date=$("day").value,d=day(date),hs=d.habits||[];$("habits").replaceChildren();
- $("empty").classList.toggle("d-none",hs.length>0);
- hs.forEach(h=>{
-  let card=node("div","habit"+(d.checks[h.id]?" done":"")),label=node("label","d-flex align-items-center gap-3");label.style.cursor="pointer";
-  let cb=node("input","habit-check");cb.type="checkbox";cb.checked=!!d.checks[h.id];cb.addEventListener("change",()=>{day(date).checks[h.id]=cb.checked;save();render()});
-  let content=node("div","flex-grow-1");content.append(node("div","fw-bold"+(cb.checked?" text-decoration-line-through":""),h.name),node("div","muted small",`${h.category} · Weight ${h.points}${h.mandatory?" · Streak habit":" · Optional"}`));label.append(cb,content);card.append(label);
-  if(manage&&date===today()){
-   let row=node("div","d-flex gap-2 mt-3"),edit=node("button","btn btn-sm btn-outline-light","Edit"),del=node("button","btn btn-sm btn-outline-danger","Delete");
-   edit.type=del.type="button";edit.onclick=()=>editHabit(h.id);del.onclick=()=>deleteHabit(h.id);row.append(edit,del);card.append(row)
-  }$("habits").append(card)
- });
- let done=hs.filter(h=>d.checks[h.id]).length,s=score(date),st=streaks();
- $("score").textContent=s;$("bar").style.width=s+"%";$("done").textContent=done;$("total").textContent=hs.length;$("streak").textContent=st.current;$("best").textContent=st.best;
- $("builder").classList.toggle("d-none",!manage||date!==today());$("manage").textContent=manage?"Finish editing":"Manage habits";
- ["gratitude","win","lesson","tomorrow"].forEach(k=>$(k).value=d[k]||"");
- renderHistory()
+let date=$("day").value,d=getDay(date),hs=d.habits||[];$("habits").replaceChildren();$("empty").classList.toggle("d-none",hs.length>0);
+hs.forEach(h=>{let checked=!!d.checks[h.id],card=el("div","habit"+(checked?" done":"")),label=el("label","d-flex align-items-center gap-3");label.style.cursor="pointer";let cb=el("input","habit-check");cb.type="checkbox";cb.checked=checked;cb.onchange=()=>{getDay(date).checks[h.id]=cb.checked;save();render()};let content=el("div","flex-grow-1");content.append(el("div","fw-bold"+(checked?" text-decoration-line-through":""),h.name),el("div","muted small",`${h.category} · Weight ${h.points}${h.mandatory?" · Streak habit":" · Optional"}`));label.append(cb,content);card.append(label);
+if(managing&&date===today()){let row=el("div","d-flex gap-2 mt-3"),edit=el("button","btn btn-sm btn-outline-light","Edit"),del=el("button","btn btn-sm btn-outline-danger","Delete");edit.type=del.type="button";edit.onclick=()=>editHabit(h.id);del.onclick=()=>deleteHabit(h.id);row.append(edit,del);card.append(row)}$("habits").append(card)});
+$("score").textContent=score(date);$("bar").style.width=score(date)+"%";$("done").textContent=hs.filter(h=>d.checks[h.id]).length;$("total").textContent=hs.length;let st=streakStats();$("streak").textContent=st.current;$("best").textContent=st.best;
+$("builder").classList.toggle("d-none",!managing||date!==today());$("manage").textContent=managing?"Finish editing":"Manage habits";
+["gratitude","win","lesson","tomorrow"].forEach(k=>$(k).value=d[k]||"");analytics();history();
 }
-function editHabit(hid){
- let h=data.routine.find(x=>x.id===hid);if(!h)return;
- let n=prompt("Habit name:",h.name);if(n===null||!n.trim())return;
- let p=Number(prompt("Weight from 1 to 100:",h.points));if(!Number.isInteger(p)||p<1||p>100){alert("Use a whole number from 1 to 100.");return}
- let mandatory=confirm("Should this habit be mandatory for your streak? OK = yes.");
- Object.assign(h,{name:n.trim(),points:p,mandatory});
- let snap=day(today()).habits.find(x=>x.id===hid);if(snap)Object.assign(snap,{...h});save();render()
+function editHabit(hid){let h=data.routine.find(x=>x.id===hid);if(!h)return;let name=prompt("Habit name:",h.name);if(name===null||!name.trim())return;let points=Number(prompt("Weight (1–100):",h.points));if(!Number.isInteger(points)||points<1||points>100){alert("Use a whole number from 1 to 100.");return}let mandatory=confirm("Mandatory for your streak? OK = yes.");Object.assign(h,{name:name.trim(),points,mandatory});let snap=getDay(today()).habits.find(x=>x.id===hid);if(snap)Object.assign(snap,{...h});save();render()}
+function deleteHabit(hid){let h=data.routine.find(x=>x.id===hid);if(!h||!confirm(`Remove "${h.name}" from today's and future routines? Past records stay unchanged.`))return;data.routine=data.routine.filter(x=>x.id!==hid);getDay(today()).habits=getDay(today()).habits.filter(x=>x.id!==hid);save();render()}
+$("manage").onclick=()=>{managing=!managing;render()};
+$("habitForm").onsubmit=e=>{e.preventDefault();if($("day").value!==today()){alert("Select today to edit your routine.");return}let name=$("name").value.trim(),points=Number($("points").value);if(!name||!Number.isInteger(points)||points<1||points>100)return;let h={id:makeId(),name,points,category:$("category").value,mandatory:$("mandatory").checked};data.routine.push(h);getDay(today()).habits.push({...h});if(save()){$("habitForm").reset();$("points").value=10;$("mandatory").checked=true;render()}};
+$("saveJournal").onclick=()=>{let d=getDay();["gratitude","win","lesson","tomorrow"].forEach(k=>d[k]=$(k).value);if(save())$("message").textContent="Saved for "+$("day").value;history()};
+function analytics(){
+let base=$("day").value,week=Array.from({length:7},(_,i)=>shift(base,i-6)),vals=week.map(d=>Object.hasOwn(data.days,d)?score(d):null),known=vals.filter(v=>v!==null);
+$("weekAvg").textContent=known.length?Math.round(known.reduce((a,b)=>a+b,0)/known.length):0;
+if(chart)chart.destroy();
+chart=new Chart($("weeklyChart"),{type:"line",data:{labels:week.map(d=>d.slice(5)),datasets:[{label:"Score",data:vals,borderColor:"#e12b25",backgroundColor:"rgba(225,43,37,.16)",pointBackgroundColor:"#e12b25",borderWidth:2,tension:.3,fill:true,spanGaps:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.raw===null?"No record":c.raw+"%"}}},scales:{y:{min:0,max:100,ticks:{color:"#aaa",callback:v=>v+"%"},grid:{color:"#303030"}},x:{ticks:{color:"#aaa"},grid:{display:false}}}}});
+let month=base.slice(0,7),dates=Object.keys(data.days).filter(d=>d.startsWith(month)).sort(),scores=dates.map(score);
+$("monthLabel").textContent=new Date(month+"-15T12:00:00").toLocaleDateString(undefined,{month:"long",year:"numeric"}).toUpperCase();
+$("monthAvg").textContent=scores.length?Math.round(scores.reduce((a,b)=>a+b,0)/scores.length):0;$("monthBest").textContent?scores.length:0;
+$("monthBest").textContent=scores.length?Math.max(...scores):0;$("monthSuccess").textContent=dates.filter(passed).length;
+$("monthDone").textContent=dates.reduce((sum,date)=>sum+(data.days[date].habits||[]).filter(h=>data.days[date].checks[h.id]).length,0);$("monthTracked").textContent=dates.length;
 }
-function deleteHabit(hid){
- let h=data.routine.find(x=>x.id===hid);if(!h||!confirm(`Remove "${h.name}" from today's and future routines? Past records remain.`))return;
- data.routine=data.routine.filter(x=>x.id!==hid);day(today()).habits=day(today()).habits.filter(x=>x.id!==hid);save();render()
-}
-$("manage").onclick=()=>{manage=!manage;render()};
-$("habitForm").onsubmit=e=>{
- e.preventDefault();if($("day").value!==today()){alert("Select today to edit your routine.");return}
- let name=$("name").value.trim(),points=Number($("points").value);if(!name||!Number.isInteger(points)||points<1||points>100)return;
- let h={id:id(),name,points,category:$("category").value,mandatory:$("mandatory").checked};
- data.routine.push(h);day(today()).habits.push({...h});
- if(save()){$("habitForm").reset();$("points").value=10;$("mandatory").checked=true;render()}
-};
-$("saveJournal").onclick=()=>{
- let d=day();["gratitude","win","lesson","tomorrow"].forEach(k=>d[k]=$(k).value);
- if(save())$("message").textContent="Debrief saved for "+$("day").value+".";renderHistory()
-};
-function renderHistory(){
- let box=$("history");box.replaceChildren();let dates=Object.keys(data.days).sort().reverse().slice(0,90);
- if(!dates.length){box.append(node("div","muted py-3","No saved days yet."));return}
- dates.forEach(date=>{
-  let d=data.days[date],hs=d.habits||[],done=hs.filter(h=>d.checks[h.id]).length;
-  let row=node("div","history-row d-flex justify-content-between align-items-center gap-3");row.tabIndex=0;
-  let left=node("div");left.append(node("div","fw-bold",date),node("div","muted small",`${done}/${hs.length} habits · ${passed(date)?"Streak achieved":"Streak not achieved"}`));
-  let right=node("div","text-end");right.append(node("div","red fw-bold",score(date)+"%"),node("div","muted small","View day →"));row.append(left,right);
-  const open=()=>{$("day").value=date;$("message").textContent="";render();window.scrollTo({top:0,behavior:"smooth"})};
-  row.onclick=open;row.onkeydown=e=>{if(e.key==="Enter")open()};box.append(row)
- })
-}
-$("export").onclick=()=>{
- let blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=node("a");
- a.href=url;a.download="goggins-log-backup-"+today()+".json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)
-};
-$("import").onchange=e=>{
- let f=e.target.files[0];if(!f)return;let r=new FileReader();
- r.onload=()=>{try{let x=JSON.parse(r.result);if(!x||!Array.isArray(x.routine)||!x.days||typeof x.days!=="object")throw Error();
- if(!confirm("Replace current data with this backup?"))return;data=x;day(today());save();render();alert("Backup imported.")
- }catch(err){alert("Invalid Goggins Log backup.")}finally{$("import").value=""}};
- r.readAsText(f)
-};
-$("day").value=today();$("day").max=today();$("day").onchange=()=>{$("message").textContent="";render()};
-day(today());save();render();
+function history(){let box=$("history");box.replaceChildren();let dates=Object.keys(data.days).sort().reverse().slice(0,90);if(!dates.length){box.append(el("div","muted py-3","No saved days yet."));return}dates.forEach(date=>{let d=data.days[date],hs=d.habits||[],done=hs.filter(h=>d.checks[h.id]).length,row=el("div","history-row d-flex justify-content-between align-items-center gap-3"),left=el("div"),right=el("div","text-end");left.append(el("div","fw-bold",date),el("div","muted small",`${done}/${hs.length} habits · ${passed(date)?"Streak achieved":"Streak not achieved"}`));right.append(el("div","red fw-bold",score(date)+"%"),el("div","muted small","View day →"));row.append(left,right);row.onclick=()=>{$("day").value=date;render();window.scrollTo({top:0,behavior:"smooth"})};box.append(row)})}
+$("export").onclick=()=>{let blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),url=URL.createObjectURL(blob),a=el("a");a.href=url;a.download="goggins-log-backup-"+today()+".json";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)};
+$("import").onchange=e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);if(!x||!Array.isArray(x.routine)||!x.days||typeof x.days!=="object"||Array.isArray(x.days))throw Error();if(!confirm("Replace your current data with this backup?"))return;data=x;getDay(today());save();render();alert("Backup imported")}catch(err){alert("Invalid backup file")}finally{$("import").value=""}};r.readAsText(f)};
+$("day").value=today();$("day").max=today();$("day").onchange=render;getDay(today());save();render();
 </script>
 </body>
 </html>
